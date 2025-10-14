@@ -2,7 +2,7 @@
 # syntax=registry.cn-hangzhou.aliyuncs.com/docker/dockerfile:1
 
 # 使用阿里云官方 Python 镜像（从官方库拉取）
-FROM registry.cn-hangzhou.aliyuncs.com/library/python:3.11-slim
+FROM docker.m.daocloud.io/library/python:3.11-slim
 
 
 
