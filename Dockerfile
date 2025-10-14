@@ -2,7 +2,8 @@
 # syntax=registry.cn-hangzhou.aliyuncs.com/docker/dockerfile:1
 
 # 使用阿里云官方 Python 镜像（从官方库拉取）
-FROM registry.cn-hangzhou.aliyuncs.com/library/python:3.11-slim
+FROM registry.cn-hangzhou.aliyuncs.com/dockerhub/python:3.11-slim
+
 
 # 设置工作目录
 WORKDIR /app
