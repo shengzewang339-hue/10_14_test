@@ -11,7 +11,9 @@ WORKDIR /app
 
 # 复制 requirements.txt 并安装依赖（使用清华源加速）
 COPY requirements.txt ./
-RUN pip install --no-cache-dir -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple
+RUN pip install --no-cache-dir -r requirements.txt \
+    -i https://mirrors.aliyun.com/pypi/simple/ \
+    --timeout 600
 
 # 拷贝整个项目
 COPY . .
@@ -21,3 +23,6 @@ EXPOSE 8000
 
 # 启动 Django 开发服务器
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+
+
+
