@@ -2,7 +2,7 @@
 FROM python:3.11-slim
 
 # 使用官方Python运行时作为基础镜像
-FROM registry.cn-hangzhou.aliyuncs.com/library/python:3.11-slim
+FROM registry.cn-hangzhou.aliyuncs.com/myproject_one/python:3.11-slim
 
 # 设置工作目录
 WORKDIR /app
