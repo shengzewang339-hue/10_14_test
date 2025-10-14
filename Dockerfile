@@ -1,3 +1,6 @@
+# syntax=docker/dockerfile:1
+FROM python:3.11-slim
+
 # 使用官方Python运行时作为基础镜像
 FROM registry.cn-hangzhou.aliyuncs.com/library/python:3.11-slim
 
