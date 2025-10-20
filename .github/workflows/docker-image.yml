@@ -3,26 +3,27 @@ name: 🚀 Auto Deploy to Server
 on:
   push:
     branches:
-      - main  # 每次推送到 main 分支自动触发
+      - main  # 当 main 分支有推送时触发
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: 检出仓库代码
-        uses: actions/checkout@v3
+    - name: Checkout code
+      uses: actions/checkout@v4
 
-      - name: 连接到服务器并部署
-        uses: appleboy/ssh-action@v1.1.0
-        with:
-          host: ${{ secrets.SERVER_HOST }}
-          username: ${{ secrets.SERVER_USER }}
-          key: ${{ secrets.SERVER_KEY }}
-          script: |
-            cd /data/lzj/smart_healthcare/
-            git pull
-            docker-compose down
-            docker-compose up -d --build
-            echo "✅ 部署完成！"
+    - name: Setup SSH
+      uses: webfactory/ssh-agent@v0.9.0
+      with:
+        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+    - name: Deploy to Server
+      run: |
+        ssh -o StrictHostKeyChecking=no root@47.118.16.173 "
+        cd /data/lzj/smart_healthcare &&
+        git pull &&
+        docker-compose down &&
+        docker-compose up -d --build
+        "
 
