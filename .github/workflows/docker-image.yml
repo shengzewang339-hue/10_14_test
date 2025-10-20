@@ -20,10 +20,11 @@ jobs:
 
     - name: Deploy to Server
       run: |
-        ssh -o StrictHostKeyChecking=no root@47.118.16.173 "
-        cd /data/lzj/smart_healthcare &&
-        git pull &&
-        docker-compose down &&
-        docker-compose up -d --build
-        "
+       ssh -o StrictHostKeyChecking=no root@47.118.16.173 "
+       cd /root/test &&
+       git pull &&
+       docker-compose down &&
+       docker-compose up -d --build
+    "
+
 
