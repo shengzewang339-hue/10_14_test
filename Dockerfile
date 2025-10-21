@@ -4,8 +4,6 @@
 # 使用阿里云官方 Python 镜像（从官方库拉取）
 FROM docker.m.daocloud.io/library/python:3.11-slim
 
-
-
 # 设置工作目录
 WORKDIR /app
 
