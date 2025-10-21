@@ -1,5 +1,9 @@
-branches:
-  - main  # 当 main 分支有推送时触发
+name: Build & Deploy
+
+on:
+  push:
+    branches:
+      - main
 
 jobs:
   deploy:
@@ -14,28 +18,29 @@ jobs:
       with:
         ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
+    - name: Test SSH Connection
+      run: ssh -o StrictHostKeyChecking=no root@47.118.16.173 "echo '✅ SSH连接成功'"
+
     - name: Deploy to Server
       run: |
         ssh -o StrictHostKeyChecking=no root@47.118.16.173 'bash -s' <<'EOF'
         set -e
-        echo "🚀 开始部署项目到服务器..."
-        
-        # 若目录不存在则创建（建议放在 /opt，更安全）
-         mkdir -p /opt/test
-         cd /opt/test
+        echo "🚀 开始部署项目..."
 
-        # 拉取最新代码
+        mkdir -p /opt/test
+        cd /opt/test
+
         if [ ! -d .git ]; then
           git clone https://github.com/shengzewang339-hue/10_14_test.git .
         else
           git pull
         fi
 
-        # 构建并重启容器
         docker-compose down
         docker-compose up -d --build
-        
+
         echo "✅ 部署完成！"
         EOF
+
 
 
