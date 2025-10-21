@@ -21,7 +21,8 @@ jobs:
         echo "🚀 开始部署项目到服务器..."
         
         # 若目录不存在则创建（建议放在 /opt，更安全）
-        cd /root/test
+         mkdir -p /opt/test
+         cd /opt/test
 
         # 拉取最新代码
         if [ ! -d .git ]; then
