@@ -29,32 +29,33 @@ jobs:
       run: |
         ssh -o StrictHostKeyChecking=no root@47.118.16.173 'bash -s' <<'EOF'
         set -e
-        echo "🚀 开始部署 Django 项目..."
+        echo "🚀 开始部署项目..."
 
-        # 服务器目标路径
         mkdir -p /opt/test
         cd /opt/test
 
-        # 首次部署 clone，否则 pull
-        if [ ! -d .git ]; then
+        if [ ! -d "10_14_test" ]; then
           echo "📥 首次部署，正在克隆仓库..."
-          git clone https://github.com/shengzewang339-hue/10_14_test.git .
+          git clone https://github.com/shengzewang339-hue/10_14_test.git
         else
           echo "🔄 仓库已存在，拉取最新更新..."
+          cd 10_14_test
           git pull
         fi
 
-        echo "📁 当前路径: $(pwd)"
+        echo "📁 当前目录结构："
+        pwd
         ls -al
 
-        # 进入项目根目录（你的 docker-compose.yml 所在位置）
+        echo "➡️ 进入 djangoProject2 目录..."
         cd djangoProject2
-        echo "📂 已进入项目目录: $(pwd)"
+        pwd
         ls -al
 
-        echo "📦 开始构建并启动容器..."
+        echo "📦 构建容器..."
         docker-compose down || true
         docker-compose up -d --build
 
-        echo "✅ 部署完成！Django 项目已启动在 8000 端口。"
+        echo "✅ 部署完成！Django 已启动在 8000 端口。"
         EOF
+    
