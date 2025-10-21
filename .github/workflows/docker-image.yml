@@ -3,44 +3,51 @@ name: Build & Deploy
 on:
   push:
     branches:
-      - main
+      - main  # 当 main 分支有新提交时触发自动部署
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
+    # 1️⃣ 拉取最新代码
     - name: Checkout code
       uses: actions/checkout@v4
 
+    # 2️⃣ 配置 SSH（连接服务器）
     - name: Setup SSH
       uses: webfactory/ssh-agent@v0.9.0
       with:
         ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
+    # 3️⃣ 测试 SSH 连接
     - name: Test SSH Connection
       run: ssh -o StrictHostKeyChecking=no root@47.118.16.173 "echo '✅ SSH连接成功'"
 
+    # 4️⃣ 部署项目
     - name: Deploy to Server
       run: |
         ssh -o StrictHostKeyChecking=no root@47.118.16.173 'bash -s' <<'EOF'
         set -e
-        echo "🚀 开始部署项目..."
+        echo "🚀 开始部署 Django 项目..."
 
+        # 确保目录存在
         mkdir -p /opt/test
         cd /opt/test
 
+        # 如果第一次部署则克隆仓库，否则更新
         if [ ! -d .git ]; then
           git clone https://github.com/shengzewang339-hue/10_14_test.git .
         else
           git pull
         fi
 
-        docker-compose down
+        # 进入 docker-compose.yml 所在目录
+        cd djangoProject2
+
+        echo "📦 开始构建 Docker 镜像..."
+        docker-compose down || true
         docker-compose up -d --build
 
-        echo "✅ 部署完成！"
+        echo "✅ 部署完成！项目已启动在 8000 端口。"
         EOF
-
-
-
