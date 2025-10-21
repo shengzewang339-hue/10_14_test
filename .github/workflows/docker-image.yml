@@ -3,24 +3,28 @@ name: Build & Deploy
 on:
   push:
     branches:
-      - main
+      - main  # 当 main 分支有提交时自动部署
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
+    # 1️⃣ 拉取仓库代码
     - name: Checkout code
       uses: actions/checkout@v4
 
+    # 2️⃣ SSH 配置
     - name: Setup SSH
       uses: webfactory/ssh-agent@v0.9.0
       with:
         ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
+    # 3️⃣ 测试 SSH 是否能连上服务器
     - name: Test SSH Connection
       run: ssh -o StrictHostKeyChecking=no root@47.118.16.173 "echo '✅ SSH连接成功'"
 
+    # 4️⃣ 部署项目到服务器
     - name: Deploy to Server
       run: |
         ssh -o StrictHostKeyChecking=no root@47.118.16.173 'bash -s' <<'EOF'
@@ -31,9 +35,9 @@ jobs:
         mkdir -p /opt/test
         cd /opt/test
 
-        # 克隆或更新代码
+        # 克隆或更新仓库
         if [ ! -d "10_14_test" ]; then
-          echo "📥 首次部署，正在克隆仓库..."
+          echo "📥 首次部署，克隆仓库..."
           git clone https://github.com/shengzewang339-hue/10_14_test.git
         else
           echo "🔄 仓库已存在，拉取最新更新..."
@@ -45,19 +49,18 @@ jobs:
         echo "📂 当前目录结构:"
         ls -al
 
-        # 进入 djangoProject2 子目录（docker-compose.yml 所在处）
-        cd djangoProject2
-        echo "📂 进入 djangoProject2 路径: $(pwd)"
-        echo "📂 子目录结构:"
+        # 进入 docker-compose.yml 所在目录
+        cd /opt/test/10_14_test
+        echo "📂 切换到项目目录: $(pwd)"
         ls -al
 
-        # 检查 docker-compose 文件是否存在
+        # 确认 docker-compose.yml 存在
         if [ ! -f "docker-compose.yml" ]; then
-          echo "❌ 未找到 docker-compose.yml，请检查仓库路径！"
+          echo "❌ 未找到 docker-compose.yml，请检查路径。"
           exit 1
         fi
 
-        echo "📦 开始构建容器..."
+        echo "📦 构建并启动容器..."
         docker-compose down || true
         docker-compose up -d --build
 
