@@ -1,25 +1,27 @@
-# 使用阿里云 dockerfile 语法镜像，避免 registry-1.docker.io 超时
-# syntax=registry.cn-hangzhou.aliyuncs.com/docker/dockerfile:1
+FROM python:3.11-slim
 
-# 使用阿里云官方 Python 镜像（从官方库拉取）
-FROM docker.m.daocloud.io/library/python:3.11-slim
-
-# 设置工作目录
 WORKDIR /app
 
-# 复制 requirements.txt 并安装依赖（使用清华源加速）
-COPY requirements.txt ./
-RUN pip install --no-cache-dir -r requirements.txt \
-    -i https://mirrors.aliyun.com/pypi/simple/ \
-    --timeout 600
+# 安装 MySQL 开发库和构建依赖
+RUN apt-get update && apt-get install -y \
+    gcc \
+    pkg-config \
+    default-libmysqlclient-dev \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
 
-# 拷贝整个项目
-COPY . .
+# 复制依赖文件
+COPY requirements.txt /app/
 
-# 暴露 Django 默认端口
+# 安装 Python 依赖
+RUN python -m pip install --upgrade pip \
+    && pip install --no-cache-dir -r requirements.txt
+
+# 复制项目代码
+COPY . /app/
+
 EXPOSE 8000
 
-# 启动 Django 开发服务器
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
 
 
