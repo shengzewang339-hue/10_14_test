@@ -66,3 +66,9 @@ jobs:
 
         echo "✅ 部署完成！Django 已启动在 8000 端口。"
         EOF
+ # 推送镜像到阿里云 ACR
+    - name: Push Docker image to Aliyun ACR
+      run: |
+        docker tag 10_22:latest crpi-jsa4b3tyjwiee8rz.cn-hangzhou.personal.cr.aliyuncs.com/mypoject_one/10_22:latest
+        docker push crpi-jsa4b3tyjwiee8rz.cn-hangzhou.personal.cr.aliyuncs.com/mypoject_one/10_22:latest        
+        
