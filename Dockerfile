@@ -1,4 +1,5 @@
 
+
 # 使用轻量级 Python 运行环境
 FROM python:3.11-slim
 
@@ -9,9 +10,8 @@ WORKDIR /app
 COPY requirements.txt /app/
 
 # 安装依赖
-RUN python -m pip install --upgrade pip && \
-    pip install --no-cache-dir -r requirements.txt
-
+RUN python -m pip install --upgrade pip -i https://mirrors.aliyun.com/pypi/simple && \
+    pip install --no-cache-dir -r requirements.txt -i https://mirrors.aliyun.com/pypi/simple
 # 复制项目所有代码到容器中
 COPY . /app/
 
