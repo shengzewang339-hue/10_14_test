@@ -28,6 +28,6 @@ jobs:
       with:
         context: .
         push: true
-        tags: crpi-jsa4b3tyjwiee8rz.cn-hangzhou.personal.cr.aliyuncs.com/mypoject_one/10_22:latest
+        tags: crpi-jsa4b3tyjwiee8rz.cn-hangzhou.personal.cr.aliyuncs.com/myproject_one/10_22:latest
         build-args: |
           PIP_INDEX_URL=https://mirrors.aliyun.com/pypi/simple
