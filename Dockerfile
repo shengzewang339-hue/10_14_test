@@ -2,7 +2,7 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
-# 安装 MySQL 开发库和构建依赖
+# 🧩 先安装 MySQL 开发依赖 + 编译工具
 RUN apt-get update && apt-get install -y \
     gcc \
     pkg-config \
@@ -17,12 +17,10 @@ COPY requirements.txt /app/
 RUN python -m pip install --upgrade pip \
     && pip install --no-cache-dir -r requirements.txt
 
-# 复制项目代码
+# 复制项目文件
 COPY . /app/
 
 EXPOSE 8000
 
+# 默认启动命令（适配 Django）
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
-
-
-
